@@ -11,7 +11,13 @@ class PerchPngQuant
 			//Cannot Optimize anything other than a PNG Image
 			return true;
 		}
-		
+
+		if(strpos($Event->subject->file_path,'://')!==false)
+		{
+			//Cloud Storage - Cannot Optimize!
+			return true;
+		}
+
 		if (!file_exists($Event->subject->file_path))
 		{
 			PerchUtil::debug("ERROR! File Does not Exist: ".$Event->subject->file_path);

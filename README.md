@@ -8,6 +8,10 @@ Perch Image Optimisation using PNGQuant
 * [PNGQuant v1.8+](https://pngquant.org/)
 * PHP `shell_exec` enabled (Contact your host)
 
+#### Cloud Storage
+
+_N.B. This app will not work when storing images using cloud storage_
+
 
 #### Installing PNGQuant on CentOS 6
 
