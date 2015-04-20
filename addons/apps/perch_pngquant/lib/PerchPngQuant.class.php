@@ -6,6 +6,12 @@ class PerchPngQuant
 
 	public static function on_create($Event)
 	{
+		if($Event->subject->mime!=="image/png")
+		{
+			//Cannot Optimize anything other than a PNG Image
+			return true;
+		}
+		
 		if (!file_exists($Event->subject->file_path))
 		{
 			PerchUtil::debug("ERROR! File Does not Exist: ".$Event->subject->file_path);
