@@ -1,34 +1,24 @@
 <?php
-
 class PerchPngQuant
 {
-	private static $table = 'kraken_jobs';
+	private static $_min_quality = 60;
+	private static $_max_quality = 90;
 
 	public static function on_create($Event)
 	{
-		$Asset = $Event->subject;
-
-		file_put_contents('./debug.txt', $Asset);
-
-	}
-
-	public static function download_file($url, $target) 
-	{
-		PerchUtil::debug('Downloading file.');
-		PerchUtil::debug($url);
-		PerchUtil::debug($target);
-		$ch = curl_init();
-		$timeout = 30;
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-		$data = curl_exec($ch);
-		curl_close($ch);
-		
-		if ($data) {
-			PerchUtil::debug('We have data, writing file');
-			file_put_contents($target, $data);
+		if (!file_exists($Event->subject->file_path))
+		{
+			PerchUtil::debug("ERROR! File Does not Exist: ".$Event->subject->file_path);
 		}
-	}
 
+		$compressed_png_content = shell_exec("pngquant --quality=".self::$_min_quality."-".self::$_max_quality." - < ".escapeshellarg($Event->subject->file_path));
+
+		if (!$compressed_png_content)
+		{
+			PerchUtil::debug("ERROR! Could not Optimize Image - Is PNG Quant Installed?");
+		}
+
+		file_put_contents($Event->subject->file_path, $compressed_png_content);
+
+	}
 }
